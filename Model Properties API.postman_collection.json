@@ -1,0 +1,1552 @@
+{
+	"info": {
+		"_postman_id": "452a0a41-6c02-4802-b8bf-89fb4f1db444",
+		"name": "Model Properties API",
+		"description": "Illustrates the B4C v2 Indexing Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tutorials",
+			"item": [
+				{
+					"name": "Querying Model Properties",
+					"item": [
+						{
+							"name": "0. GET Model Versions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get folder content of one folder, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"find some version urns: \", function () {",
+											"    var body = JSON.parse(responseBody);",
+											"    var find = body.data ",
+											"    pm.expect(find).not.eq(undefined); ",
+											"    if(find){ ",
+											"        //get version id ",
+											"        var first_test_model_version = find[0].relationships.tip.data.id",
+											"        var second_test_model_version = find[1].relationships.tip.data.id",
+											" ",
+											"         //url encoded",
+											"        pm.environment.set(\"first_test_model_version\",  first_test_model_version);",
+											"        pm.environment.set(\"second_test_model_version\",  second_test_model_version);",
+											"        ",
+											"    }else{",
+											"        ",
+											"    }",
+											"    ",
+											"});  "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{base_domain}}/data/v1/projects/b.{{project_id_without_b}}/folders/{{one_folder_id}}/contents",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"data",
+										"v1",
+										"projects",
+										"b.{{project_id_without_b}}",
+										"folders",
+										"{{one_folder_id}}",
+										"contents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1. Specify index (batch-status)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Specify index (batch-status), Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"find index id: \", function () {",
+											"    var body = JSON.parse(responseBody);",
+											"    var find = body.indexes ",
+											"    ",
+											"    if(pm.expect(find).not.eq(undefined) &&  find.length==2){  ",
+											"        //get index id ",
+											"        var first_model_version_index_id = find[0].indexId;",
+											"        var second_model_version_index_id = find[1].indexId; ",
+											"",
+											"        pm.environment.set(\"one_model_version_index_id\",  first_model_version_index_id);",
+											"         pm.environment.set(\"first_model_version_index_id\",  first_model_version_index_id);",
+											"        pm.environment.set(\"second_model_version_index_id\",  second_model_version_index_id); ",
+											"    }  ",
+											"});  ",
+											" "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"versions\": [\n        {\n            \"versionUrn\": \"{{first_test_model_version}}\"  \n        },\n        {\n            \"versionUrn\": \"{{second_test_model_version}}\"  \n        }    \n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes:batch-status",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes:batchStatus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2. Poll for progress of one index",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.collectionVariables.set(\"current_manifest_url\", jsonData.manifestUrl);\r",
+											"pm.collectionVariables.set(\"current_fields_url\", jsonData.fieldsUrl);\r",
+											"pm.collectionVariables.set(\"current_properties_url\", jsonData.propertiesUrl);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3. Download the manifest",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the manifest, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_manifest_url}}",
+									"host": [
+										"{{current_manifest_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.Download the fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the fields, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_fields_url}}",
+									"host": [
+										"{{current_fields_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "5. Download the raw index",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the raw index, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_properties_url}}",
+									"host": [
+										"{{current_properties_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "6. Build and run a query",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Build and run a query, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get query id: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryId != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_id\", jsonData.queryId);   \r",
+											"    }\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": { \r\n        \"$and\": [ \r\n            {\r\n                \"$gt\": [{ \"$count\": \"s.views\" }, 0] \r\n            }\r\n        ] \r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}/queries",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}",
+										"queries"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "7. Poll for query progress",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Poll for query progress, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get result url: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryResultsUrl != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_result_url\", jsonData.queryResultsUrl);   \r",
+											"    }\r",
+											"})\r",
+											"\r",
+											"\r",
+											" "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}/queries/{{current_query_id}}",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}",
+										"queries",
+										"{{current_query_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "8. Download the query results",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the query results, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_query_result_url}}",
+									"host": [
+										"{{current_query_result_url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tracking Changes in Model Versions",
+					"item": [
+						{
+							"name": "0. GET two versions of same model",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get folder content of one folder, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"find one model with two versions: \", function () {",
+											"    var body = JSON.parse(responseBody);",
+											"    pm.expect(body.data).not.eq(undefined); ",
+											"",
+											"    var find = body.data.find(i=>{",
+											"        var urn = i.relationships.tip.data.id;",
+											"        //check if version > 1, which means this models have multiple versions",
+											"        var lastChar = urn.substring(urn.length-1);",
+											"        console.log(lastChar);",
+											"        if (lastChar !=\"1\")",
+											"           return true",
+											"        else",
+											"           return false ",
+											"        }) ",
+											"",
+											"    if(find){  ",
+											"        //get current version id ",
+											"        var curVersionUrn = find.relationships.tip.data.id",
+											"        ",
+											"        var lastChar = curVersionUrn.substring(curVersionUrn.length-1); ",
+											"        //get one previous version id",
+											"        var preVerNum = Number(lastChar)-1;",
+											"        preVerNum = String(preVerNum);",
+											"        console.log(preVerNum)",
+											"        var prevVersionUrn = curVersionUrn.slice(0, -1) +preVerNum ",
+											"         pm.environment.set(\"curVersionUrn\",  curVersionUrn);",
+											"        pm.environment.set(\"prevVersionUrn\",  prevVersionUrn); ",
+											"        ",
+											"    }else{",
+											"        ",
+											"    }",
+											"    ",
+											"});  "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{base_domain}}/data/v1/projects/b.{{project_id_without_b}}/folders/{{one_folder_id}}/contents",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"data",
+										"v1",
+										"projects",
+										"b.{{project_id_without_b}}",
+										"folders",
+										"{{one_folder_id}}",
+										"contents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1. Specify diff index (batch-status)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Specify diff index (batch-status), Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"find index id: \", function () {",
+											"    var body = JSON.parse(responseBody);",
+											"    var find = body.diffs ",
+											"    ",
+											"    if(pm.expect(find).not.eq(undefined) &&  find.length>0){  ",
+											"        //get index id ",
+											"        var diff_index_id = find[0].diffId; ",
+											"        pm.environment.set(\"diff_index_id\",  diff_index_id); ",
+											"    }  ",
+											"});  ",
+											" "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n         \"diffs\": [\n             {\n                 \"prevVersionUrn\": \"{{prevVersionUrn}}\",\n                 \"curVersionUrn\": \"{{curVersionUrn}}\"\n             }\n         ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/diffs:batch-status",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"diffs:batch-status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2. Poll for progress",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.collectionVariables.set(\"current_manifest_url\", jsonData.manifestUrl);\r",
+											"pm.collectionVariables.set(\"current_fields_url\", jsonData.fieldsUrl);\r",
+											"pm.collectionVariables.set(\"current_properties_url\", jsonData.propertiesUrl);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/diffs/{{diff_index_id}}",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"diffs",
+										"{{diff_index_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3. Download the manifest",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the manifest, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_manifest_url}}",
+									"host": [
+										"{{current_manifest_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.Download the fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the fields, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_fields_url}}",
+									"host": [
+										"{{current_fields_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "5. Download the raw index",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the raw index, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_properties_url}}",
+									"host": [
+										"{{current_properties_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "6. Build and run a query",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Build and run a query, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get query id: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryId != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_id\", jsonData.queryId);   \r",
+											"    }\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n         \"query\": {\r\n             \"$ne\": [\r\n                 \"s.props.p1b2aabe1\",\r\n                 \"s.prev.props.p1b2aabe1\"\r\n             ]\r\n         }\r\n     }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/diffs/{{diff_index_id}}/queries",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"diffs",
+										"{{diff_index_id}}",
+										"queries"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "7. Poll for query progress",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Poll for query progress, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get result url: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryResultsUrl != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_result_url\", jsonData.queryResultsUrl);   \r",
+											"    }\r",
+											"})\r",
+											"\r",
+											"\r",
+											" "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/diffs/{{diff_index_id}}/queries/{{current_query_id}}",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"diffs",
+										"{{diff_index_id}}",
+										"queries",
+										"{{current_query_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "8. Download the query results",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the query results, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_query_result_url}}",
+									"host": [
+										"{{current_query_result_url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Query Language Reference",
+					"item": [
+						{
+							"name": "0. GET one Model Version of Revit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get folder content of one folder, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"find some version urns: \", function () {",
+											"    var body = JSON.parse(responseBody);",
+											"    var find = body.data ",
+											"    pm.expect(find).not.eq(undefined); ",
+											"    if(find && find.length > 0){ ",
+											"        //get version id ",
+											"        var one_test_model_version = find[0].relationships.tip.data.id ",
+											"         //url encoded",
+											"        pm.environment.set(\"one_test_model_version\",  one_test_model_version); ",
+											"    }else{",
+											"        ",
+											"    }",
+											"    ",
+											"});  "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{base_domain}}/data/v1/projects/b.{{project_id_without_b}}/folders/{{one_folder_id}}/contents",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"data",
+										"v1",
+										"projects",
+										"b.{{project_id_without_b}}",
+										"folders",
+										"{{one_folder_id}}",
+										"contents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "1. Specify index (batch-status)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Specify index (batch-status), Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"find index id: \", function () {",
+											"    var body = JSON.parse(responseBody);",
+											"    var find = body.indexes ",
+											"    ",
+											"    if(pm.expect(find).not.eq(undefined) &&  find.length>0){  ",
+											"        //get index id ",
+											"        var one_model_version_index_id = find[0].indexId;  ",
+											"        pm.environment.set(\"one_model_version_index_id\",  one_model_version_index_id); ",
+											"    }  ",
+											"});  ",
+											" "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"versions\": [\n        {\n            \"versionUrn\": \"{{one_test_model_version}}\"  \n        }   \n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes:batch-status",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes:batch-status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2. Poll for progress of one index",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"pm.collectionVariables.set(\"current_manifest_url\", jsonData.manifestUrl);\r",
+											"pm.collectionVariables.set(\"current_fields_url\", jsonData.fieldsUrl);\r",
+											"pm.collectionVariables.set(\"current_properties_url\", jsonData.propertiesUrl);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3. Download the manifest",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the manifest, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_manifest_url}}",
+									"host": [
+										"{{current_manifest_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.Download the fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the fields, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_fields_url}}",
+									"host": [
+										"{{current_fields_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "5. Download the raw index",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the raw index, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_properties_url}}",
+									"host": [
+										"{{current_properties_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "6 Query: Get Revit Classification with Column Transform",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Build and run a query, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get query id: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryId != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_id\", jsonData.queryId);   \r",
+											"    }\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": {\r\n        \"$and\": [\r\n            { \"$notnull\": \"s.props.p20d8441e\" },\r\n            { \"$notnull\": \"s.props.p30db51f9\" },\r\n            { \"$notnull\": \"s.props.p13b6b3a0\" },\r\n            { \"$gt\": [{ \"$count\": \"s.views\" }, 0] }\r\n        ]\r\n    },\r\n    \"columns\": {\r\n        \"s.svf2Id\": true,\r\n        \"lmvName\": \"s.props.p153cb174\",\r\n        \"revitCategory\": \"s.props.p20d8441e\",\r\n        \"revitFamily\": \"s.props.p30db51f9\",\r\n        \"revitType\": \"s.props.p13b6b3a0\",\r\n        \"s.views\": true\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}/queries",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}",
+										"queries"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "7. Poll for query progress",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Poll for query progress, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get result url: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryResultsUrl != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_result_url\", jsonData.queryResultsUrl);   \r",
+											"    }\r",
+											"})\r",
+											"\r",
+											"\r",
+											" "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}/queries/{{current_query_id}}",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}",
+										"queries",
+										"{{current_query_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "8. Download the query results",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the query results, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_query_result_url}}",
+									"host": [
+										"{{current_query_result_url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "6 Query: Fuzzy string matching with a dimension constraint",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Build and run a query, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get query id: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryId != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_id\", jsonData.queryId);   \r",
+											"    }\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\":\r\n    {\r\n        \"$and\": [\r\n            {\r\n                \"$or\": [\r\n                    { \"$like\": [\"s.props.p6637df3c\", \"'%Steel%'\"] },\r\n                    { \"$like\": [\"s.props.p6637df3c\", \"'%steel%'\"] }\r\n                ]\r\n            },\r\n            {\r\n                \"$ge\": [\"s.props.p69a0daab\", 0.5]\r\n            }\r\n        ]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}/queries",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}",
+										"queries"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "7. Poll for query progress",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Poll for query progress, Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"get result url: \", function () {\r",
+											"   var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"    if(pm.expect(jsonData).not.eq(undefined) &&  jsonData.queryResultsUrl != undefined){  \r",
+											"\r",
+											"        pm.collectionVariables.set(\"current_query_result_url\", jsonData.queryResultsUrl);   \r",
+											"    }\r",
+											"})\r",
+											"\r",
+											"\r",
+											" "
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes/{{one_model_version_index_id}}/queries/{{current_query_id}}",
+									"host": [
+										"{{base_domain}}"
+									],
+									"path": [
+										"construction",
+										"index",
+										"v2",
+										"projects",
+										"{{project_id_without_b}}",
+										"indexes",
+										"{{one_model_version_index_id}}",
+										"queries",
+										"{{current_query_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "8. Download the query results",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Download the query results, Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{current_query_result_url}}",
+									"host": [
+										"{{current_query_result_url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Authentication 2-legged token backup",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"access_token\", data.access_token);",
+							"postman.setEnvironmentVariable(\"expires_in\", data.expires_in);",
+							"postman.setEnvironmentVariable(\"token_type\", data.token_type);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{client_secret}}",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "data:read data:write bucket:create bucket:read account:read bucket:delete code:all account:write",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_domain}}/authentication/v1/authenticate",
+					"host": [
+						"{{base_domain}}"
+					],
+					"path": [
+						"authentication",
+						"v1",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET User@ME bakup",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{base_domain}}/userprofile/v1/users/@me",
+					"host": [
+						"{{base_domain}}"
+					],
+					"path": [
+						"userprofile",
+						"v1",
+						"users",
+						"@me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "data:read",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			},
+			{
+				"key": "state",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{client_secret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{client_id}}",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://developer.api.autodesk.com/authentication/v1/gettoken",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://developer.api.autodesk.com/authentication/v1/authorize",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "https://www.getpostman.com/oauth2/callback",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "access_token",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "forge_token",
+			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IlU3c0dGRldUTzlBekNhSzBqZURRM2dQZXBURVdWN2VhIn0.eyJzY29wZSI6WyJkYXRhOnJlYWQiLCJkYXRhOndyaXRlIl0sImNsaWVudF9pZCI6InVpb1VpRmplOXU4WWdiM3VkQWhPenJuU1RwNDdKWmRvIiwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2Fqd3RleHA2MCIsImp0aSI6IjJDam9manJnZm5tMDJObjhyelNpVG1lc2RQWmZFZ3ZuRXhPMHM0RVhIUldEdEE4M1F0V1pDalBxYWJlVFk0cjMiLCJ1c2VyaWQiOiI3RVJCTUJSOUVBNEEiLCJleHAiOjE2MjcyOTQwMDN9.N5TCvEmzpAqTQL_ugbRcSkkdQrj5glWMdhVUcH6U0eJqHZ6fYiWGkml7VO3Kw7PkyHgBR6aC4Svv3WVM3MU0vW6no-p38_Y08VkKtbkCXdTqWuIY8BbZ7Pdp0GrqyozYF2U1tzFYZPGLSFHa1tAFURXgzJLlgAuE84GnJXvQXNTEpU7rqqHhXY9HjUVHJ0dvvQ1JxmapmGOpqzkvF_M7DuHlH-QIUINQ2-tjdKW5U1SJJpCIVD0BORKZ3YhwcO3dsX4DMu1dOz_98UhVNYhs4D1al5jLopT4TDukp4eaa6Ks6RSwJBZRNvARsc0Eh4h2jhe8ABopO0NYZcoislMCnw"
+		},
+		{
+			"key": "project_id",
+			"value": "f83cef12-deef-4771-9feb-4f85643e3c46"
+		},
+		{
+			"key": "index_file_urn1",
+			"value": "urn:adsk.wipprod:fs.file:vf.DyTWutcvTcOLUNUARxcTzQ?version=4"
+		},
+		{
+			"key": "index_file_urn2",
+			"value": "urn:adsk.wipprod:fs.file:vf.LaqNypGeQTaKs0DA__nzLA?version=4"
+		},
+		{
+			"key": "index_file_urn3",
+			"value": "urn:adsk.wipprod:fs.file:vf.uyT8qe04TDSTDXC2sdfBtg?version=8"
+		},
+		{
+			"key": "forge_base_address",
+			"value": "developer.api.autodesk.com"
+		},
+		{
+			"key": "current_index_id",
+			"value": ""
+		},
+		{
+			"key": "current_manifest_url",
+			"value": ""
+		},
+		{
+			"key": "current_fields_url",
+			"value": ""
+		},
+		{
+			"key": "current_properties_url",
+			"value": ""
+		},
+		{
+			"key": "current_query_id",
+			"value": ""
+		},
+		{
+			"key": "current_query_result_url",
+			"value": ""
+		},
+		{
+			"key": "current_diff_id",
+			"value": ""
+		}
+	]
+}
