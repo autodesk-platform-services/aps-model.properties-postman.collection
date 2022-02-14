@@ -9,8 +9,8 @@
 
 ## Description
 
-This repository provides demos for the category of [Model Properties API](https://forge.autodesk.com/en/docs/acc/v1/overview/field-guide/model-properties). This API is available (also compatible) with BIM360 and Autodesk Construnction Cloud (ACC).
- 
+This repository provides a postman collection that follows [three tutorials for Model Properties API](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/) on Forge developer portal. This API works with BIM 360 Docs and AutodeskDocs 
+
 The API supports **3 legged token** only.
 
 ## What's Postman?
@@ -32,7 +32,7 @@ Postman is a popular tool that provides an easy-to-use interface to send HTTP re
 
 3. Upload some demo models to one folder (better in any folder with **Project Files**). This Postman sample provides some [Revit models](./DemoModels). One model has two versions which can be used to test **Diff API**. 
 
-4. Get BIM360 (or ACC) project id (without b.) by API , or copy from browser URL bar of BIM360(or ACC) UI. And get the folder id.
+4. Get BIM 360/ACC Docs project id (without b.) by API , or copy from browser URL bar of Docs UI. And get the folder id.
 
 5.  Clone this repository or download it. It's recommended to install [GitHub Desktop](https://desktop.github.com/). To clone it via command line, use the following (**Terminal** on MacOSX/Linux, **Git Shell** on Windows):
 
@@ -40,7 +40,7 @@ Postman is a popular tool that provides an easy-to-use interface to send HTTP re
 
 6. Import the collection and environment files to Postman
 
-7. In environment, input _client id_, _client secret_, _project id_ , _one folder id_
+7. In environment, input _client id_, _client secret_, _project id_, _one folder id_
 
    <p align="center"><img src="./help/apiref-env.png" width="800" ></p>  
 
@@ -66,36 +66,36 @@ Postman is a popular tool that provides an easy-to-use interface to send HTTP re
 
 1. Assume the steps of **Setup** have been performed and the access token is ready.
 
-2. Play the scripts, following by the tutorials. Try to change some parameters or body for more scenarios test. 
+2. Play the scripts, following by the tutorials. Try to change some parameters or body for more scenarios to test. 
    <p align="center"><img src="./help/collection.png" width="400" ></p>   
 
-### Tutorial: Querying Model Properties
+### Tutorial 1: Querying Model Properties
 
 This follows the tutorial [Querying Model Properties](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/query)
 
-The post-test script of **0. GET Model Versions** gets tip version urn of first and second model in the folder. You can also hard-coded the two urns with the variables: __first_test_model_version__, __second_test_model_version__
+**0. GET Model Versions** retrieves  tip version urn of first and second model in the folder. You can also hard-coded the two urns in the variables: **first_test_model_version**, **second_test_model_version**
 
-follow the sequence to run the endpoints one by one. It will investigate one model version only. check the indexing status, download manifes, fields, raw properties data of the model. It will also post a query, and get the properties data which meet the query condition. check the size and content of raw properties and query properties. In theory, raw properties have more data than query properties.
+Follow the sequence of scripts to run the endpoints one by one. It will allow you to investigate one model version only. Check the indexing status, download manifest, fields, and raw properties data of the model. It will also let you post a query, and get the properties data which meet the query condition. Check the size and content of raw properties and query properties. Normally, raw properties have more data than query properties.
 
-### Tutorial: Tracking Changes in Model Versions
+### Tutorial 2: Tracking Changes in Model Versions
 
 This follows the tutorial [Tracking Changes in Model Versions](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/diff)
 
-The post test script of **0. GET two versions of same model** gets two version urn of one model in the folder. In the sample, the two versions of Audubon_Mechanical.rvt in [Revit models](./DemoModels) are used. You can also hard-coded the two urns with the variables: __prevVersionUrn__, __curVersionUrn__
+ **0. GET two versions of same model** gets two version urn of one model in the folder. In the sample, the two versions of Audubon_Mechanical.rvt in [Revit models](./DemoModels) are used. You can also hard-coded the two urns in the variables: **prevVersionUrn**, **curVersionUrn**
 
-follow the sequence to run the endpoints one by one. It will investigate the diff. check the diff indexing status, download manifes, fields, raw properties data of the diff. It will also post a query, and get the properties data which meet the query condition. check the size and content of raw properties and query properties. In theory, raw properties have more data than query properties.
+Run the sequence of script one by one. It will allow you to investigate how the diff works. Check the diff indexing status, download the manifest, fields, and raw properties data of the diff. It will also let you post a query, and get the properties data which meet the query condition. Check the size and content of raw properties and query properties. Normally, raw properties have more data than query properties.
 
-### Tutorial: Query Language Reference
+### Tutorial 3: Query Language Reference
 
 This follows the tutorial [Query Language Reference](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/query-ref)
 
-The post test script of **0. GET one Model Version of Revit** gets tip version urn of one Revit model in the folder. You can also hard-coded the two urns with the variables: __one_test_model_version__
+**0. GET one Model Version of Revit** retrieves a tip version of urn for one Revit model in the folder. You can also hard-code the two urns with the variables: **one_test_model_version**
 
-follow the sequence to run the endpoints one by one. It will investigate one model version only. check the indexing status, download manifes, fields, raw properties data of the model. It will also post one query (the 6th endpoint), and get the properties data which meet the query condition. check the size and content of raw properties and query properties. It has one more query (also named 6th endpoint), run it, and repeat 7th, 8th endpoint to get query properties.
+Run the sequence of script one by one. It will allow you to investigate one model version. Check the indexing status, download manifest, fields, and raw properties data of the model. It will also allow you to post one query (the 6th endpoint), and get the properties data which meet the query condition. Check the size and content of raw properties and query properties. It has one more query (also named 6th endpoint), run it, and repeat 7th, 8th endpoint to get query properties.
 
 ## Notes
-1.  If the indexing is processing, wait some minutes to check status again
-2.  If building query, please ensure the available fields contain the properties with which you want to build the query, and the correct property id (format is like p00723fa6)
+1.  If the indexing is processing, wait a few minutes to check status again
+2.  If building query, please ensure the available fields contain the properties with which you want to build the query, and the correct property id (format looks like "p00723fa6")
  
  
 ## Further Materials
@@ -116,4 +116,4 @@ This sample is licensed under the terms of the [MIT License](http://opensource.o
 
 ## Written by
 
-Xiaodong Liang [@coldwood](https://twitter.com/coldwood), [Forge Partner Development](http://forge.autodesk.com)
+Xiaodong Liang [@coldwood](https://twitter.com/coldwood), [Developer Advacate and Support team](http://forge.autodesk.com)
