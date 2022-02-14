@@ -9,7 +9,7 @@
 
 ## Description
 
-This repository provides a postman collection that follows [three tutorials for Model Properties API](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/) on Forge developer portal. This API works with BIM 360 Docs and AutodeskDocs 
+This repository provides a postman collection that follows [three tutorials for Model Properties API](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/) on Forge developer portal. This API works with BIM360 Docs and Autodesk Docs. 
 
 The API supports **3 legged token** only.
 
