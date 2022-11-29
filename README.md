@@ -9,13 +9,13 @@
 
 ## Description
 
-This repository provides a postman collection that follows [three tutorials for Model Properties API](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/) on Forge developer portal. This API works with BIM360 Docs and Autodesk Docs. 
+This repository provides a postman collection that follows [three tutorials for Model Properties API](https://APS.autodesk.com/en/docs/acc/v1/tutorials/model-properties/) on APS developer portal. This API works with BIM360 Docs and Autodesk Docs. 
 
 The API supports **3 legged token** only.
 
 ## What's Postman?
 
-Postman is a popular tool that provides an easy-to-use interface to send HTTP requests. Postman is able to parse the responses that Forge sends you and save response parameter values to variables. These parameters can then be reused in subsequent requests through these variables. The Postman collections in this repository use this ability to provide pre-populated HTTP requests to help you follow the tutorial workflow with minimal effort. You can also modify the requests and experiment without having to write a single line of code. 
+Postman is a popular tool that provides an easy-to-use interface to send HTTP requests. Postman is able to parse the responses that APS sends you and save response parameter values to variables. These parameters can then be reused in subsequent requests through these variables. The Postman collections in this repository use this ability to provide pre-populated HTTP requests to help you follow the tutorial workflow with minimal effort. You can also modify the requests and experiment without having to write a single line of code. 
 
 - You can learn how to install and use Postman from [here](https://learning.getpostman.com/docs/postman/launching_postman/installation_and_updates).
 
@@ -24,7 +24,7 @@ Postman is a popular tool that provides an easy-to-use interface to send HTTP re
 
 ## Setup
 
-1.  **Forge Account**: Learn how to create a Forge Account, activate the subscription and create an app by [this tutorial](http://learnforge.autodesk.io/#/account/). Get Forge _client id_, _client secret_ and  _callback url_. Please register Forge app with the _callback url_ as 
+1.  **APS Account**: Learn how to create a APS Account, activate the subscription and create an app by [this tutorial](http://aps.autodesk.com/tutorials/#/account/). Get APS _client id_, _client secret_ and  _callback url_. Please register APS app with the _callback url_ as 
 
     ```https://www.getpostman.com/oauth2/callback```
 
@@ -36,7 +36,7 @@ Postman is a popular tool that provides an easy-to-use interface to send HTTP re
 
 5.  Clone this repository or download it. It's recommended to install [GitHub Desktop](https://desktop.github.com/). To clone it via command line, use the following (**Terminal** on MacOSX/Linux, **Git Shell** on Windows):
 
-    ```git clone https://github.com/Autodesk-Forge/forge-model.properties-postman.collection```
+    ```git clone https://github.com/autodesk-platform-services/aps-model.properties-postman.collection```
 
 6. Import the collection and environment files to Postman
 
@@ -103,11 +103,11 @@ Run the sequence of script one by one. It will allow you to investigate one mode
 - [Querying Model Properties](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/query)
 - [Tracking Changes in Model Versions](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/diff)
 - [Query Language Reference](https://forge.autodesk.com/en/docs/acc/v1/tutorials/model-properties/query-ref)
-- [Model Properties API Walkthrough in PowerShell Core](https://github.com/Autodesk-Forge/forge-model-properties.powershell)
+- [Model Properties API Walkthrough in PowerShell Core](https://github.com/autodesk-platform-services/aps-model-properties.powershell)
 
 
 **Blogs**:
-- [Forge Blog](https://forge.autodesk.com)
+- [APS Blog](https://forge.autodesk.com)
 - [Field of View](https://fieldofviewblog.wordpress.com/), a BIM focused blog
 
 ## License
@@ -116,4 +116,4 @@ This sample is licensed under the terms of the [MIT License](http://opensource.o
 
 ## Written by
 
-Xiaodong Liang [@coldwood](https://twitter.com/coldwood), [Developer Advacate and Support team](http://forge.autodesk.com)
+Xiaodong Liang [@coldwood](https://twitter.com/coldwood), Developer Advovacy and Support, Autodesk

@@ -1497,7 +1497,7 @@
 	],
 	"variable": [
 		{
-			"key": "forge_token",
+			"key": "aps_token",
 			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IlU3c0dGRldUTzlBekNhSzBqZURRM2dQZXBURVdWN2VhIn0.eyJzY29wZSI6WyJkYXRhOnJlYWQiLCJkYXRhOndyaXRlIl0sImNsaWVudF9pZCI6InVpb1VpRmplOXU4WWdiM3VkQWhPenJuU1RwNDdKWmRvIiwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2Fqd3RleHA2MCIsImp0aSI6IjJDam9manJnZm5tMDJObjhyelNpVG1lc2RQWmZFZ3ZuRXhPMHM0RVhIUldEdEE4M1F0V1pDalBxYWJlVFk0cjMiLCJ1c2VyaWQiOiI3RVJCTUJSOUVBNEEiLCJleHAiOjE2MjcyOTQwMDN9.N5TCvEmzpAqTQL_ugbRcSkkdQrj5glWMdhVUcH6U0eJqHZ6fYiWGkml7VO3Kw7PkyHgBR6aC4Svv3WVM3MU0vW6no-p38_Y08VkKtbkCXdTqWuIY8BbZ7Pdp0GrqyozYF2U1tzFYZPGLSFHa1tAFURXgzJLlgAuE84GnJXvQXNTEpU7rqqHhXY9HjUVHJ0dvvQ1JxmapmGOpqzkvF_M7DuHlH-QIUINQ2-tjdKW5U1SJJpCIVD0BORKZ3YhwcO3dsX4DMu1dOz_98UhVNYhs4D1al5jLopT4TDukp4eaa6Ks6RSwJBZRNvARsc0Eh4h2jhe8ABopO0NYZcoislMCnw"
 		},
 		{
@@ -1517,7 +1517,7 @@
 			"value": "urn:adsk.wipprod:fs.file:vf.uyT8qe04TDSTDXC2sdfBtg?version=8"
 		},
 		{
-			"key": "forge_base_address",
+			"key": "aps_base_address",
 			"value": "developer.api.autodesk.com"
 		},
 		{
