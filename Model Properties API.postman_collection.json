@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "452a0a41-6c02-4802-b8bf-89fb4f1db444",
+		"_postman_id": "dede108a-9b1d-4a5c-82ee-84ebe9132713",
 		"name": "Model Properties API",
 		"description": "Illustrates the B4C v2 Indexing Service",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29581881"
 	},
 	"item": [
 		{
@@ -124,7 +125,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes:batch-status",
+									"raw": "{{base_domain}}/construction/index/v2/projects/{{project_id_without_b}}/indexes:batchStatus",
 									"host": [
 										"{{base_domain}}"
 									],
@@ -1326,29 +1327,41 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"var keys = pm.environment.get(\"client_id\") + \":\" + pm.environment.get(\"client_secret\");\r",
+							"console.log(keys);\r",
+							"let encodedKeys = btoa(keys); \r",
+							"console.log(encodedKeys)\r",
+							"pm.environment.set(\"encodedKeys\",encodedKeys);"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
 						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{encodedKeys}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": [
-						{
-							"key": "client_id",
-							"value": "{{client_id}}",
-							"type": "text"
-						},
-						{
-							"key": "client_secret",
-							"value": "{{client_secret}}",
-							"type": "text"
-						},
 						{
 							"key": "grant_type",
 							"value": "client_credentials",
@@ -1430,7 +1443,17 @@
 			},
 			{
 				"key": "client_authentication",
-				"value": "body",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://developer.api.autodesk.com/authentication/v2/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://developer.api.autodesk.com/authentication/v2/authorize",
 				"type": "string"
 			},
 			{
@@ -1446,16 +1469,6 @@
 			{
 				"key": "clientId",
 				"value": "{{client_id}}",
-				"type": "string"
-			},
-			{
-				"key": "accessTokenUrl",
-				"value": "https://developer.api.autodesk.com/authentication/v1/gettoken",
-				"type": "string"
-			},
-			{
-				"key": "authUrl",
-				"value": "https://developer.api.autodesk.com/authentication/v1/authorize",
 				"type": "string"
 			},
 			{
